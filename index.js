@@ -136,3 +136,75 @@ function mergeSort(arr){
 }
 
 console.log(mergeSort([10,24,76,73,1]))
+
+// Quick Sort: Easy to solve through recursive like merge sort
+// exploits the fact that arrays of 0 or 1 element are sorted
+// Works with selecting one element (calling pivot) and finding the index where the pivct should end up in the sorted array
+
+// Pivot/Partition helper function:
+// It is useful to first implement a function responsible arranging elements in an array on eitehr side of a pivot
+// This helper function should designate an element as the pivot 
+// Then rearrange elements in the array so that all values less than the pivot are moved to the left of the pivot, and all values greater than the pivot are moved to the right of the pivot
+// The order of elements on eitehr side of the pivot does not matter!
+// This function should do this in place, meaning do not create a new array
+// Runtime of quick sort depends on how one selects the pivot
+// Ideally, the pivot should be chosen so that it is the median value in the data set (i.e. array)
+
+// Pivot Pseudocode:
+// It will accept three arguments: an array, a start index, and an end index (these can default to 0 and the array length minus 1)
+// Grab the pivot from the start of the array
+// Store the current pivot index in a variable (this will keep track of where the pivot should end up and how many elements are less than the current pivot)
+// Loop through the array
+// If the pivot is greater than the current element, increment the pivot index variable and then swap the current element with the element at the pivot index
+// Swap the starting element (the pivot) with the pivot index
+function pivot(arr, start=0, end=arr.length+1){
+  function swap(array, i, j){
+    var temp = array[i]
+    array[i] = array[j]
+    array[j] = temp
+  }
+  
+  let pivot = arr[start];
+  var swapIndex = start; // starts at index 0
+
+  for(let i = start + 1; i < arr.length; i++){
+    if(pivot > arr[i]){
+      swapIndex++;
+      swap(arr, swapIndex, i)
+    }
+  }
+  swap(arr, start, swapIndex)
+  return swapIndex
+}
+
+pivot([4,8,2,1,5,7,6,3])
+// Comparisons for the pivot:
+// OG Array: [4,8,2,1,5,7,6,3]
+// [4,2,8,1,5,7,6,3]
+// [4,2,8,1,5,7,6,3]
+// [4,2,1,8,5,7,6,3]
+// [4,2,1,3,5,7,6,8]
+// Very last thing is to take the swapIndex and swap with the start : [3,2,1,4,5,7,6,8]
+
+// 3
+// pivot([2,1,3,4,8,7,6,5])
+
+
+// Quicksort Pseudocode:
+// Big O: O(n log n)
+// Call the pivot helper on the array
+// Call quicksort again on the left side and right side of the pivot
+// When the helper returns to you the updated pivot index, recursively call the pivot helper on the subarray to the left of that index and the subarray to the right of that index 
+// Base case: if the subarray has one element
+function quickSort(arr, left=0, right=arr.length-1){
+  if(left < right){
+    let pivotIndex = pivot(arr, left, right)
+    // recursive call for left side
+    quickSort(arr, left, pivotIndex-1) // so we do not include the actual pivot 
+    // recursive call for right side
+    quickSort(arr, pivotIndex+1,right)
+  }
+  return arr
+}
+
+console.log(quickSort([4,6,9,1,2,5,3]))
